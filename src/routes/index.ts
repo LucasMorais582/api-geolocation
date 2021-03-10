@@ -1,10 +1,10 @@
 import { Router } from 'express';
-// import postRouter from './posts.routes';
-// import redditRouter from './reddit.routes';
+import mapsRouter from './external/maps.routes';
+import getAdressesRouter from './get_adresses.routes';
 
 const routes = Router();
 
-// routes.use('/posts', postRouter);
-// routes.use('/reddit', redditRouter);
+routes.use('/maps', mapsRouter);
+routes.use('/get-adresses', getAdressesRouter);
 
 export default routes;
