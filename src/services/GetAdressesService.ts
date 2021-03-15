@@ -1,6 +1,7 @@
+import 'reflect-metadata';
+
 import GetAdressesRepository from '../repositories/GetAdressesRepository';
 import RouteMapsRepository from '../repositories/RouteMapsRepository';
-
 import { injectable } from 'tsyringe';
 
 interface adress{
