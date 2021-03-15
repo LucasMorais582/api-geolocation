@@ -23,18 +23,12 @@ class GetAdressesService{
     try{
       let adresses = this.get_adresses_repository.concatAdressForRequest(object_body);
       let adresses_combined: any[] = this.get_adresses_repository.combineAdressesForRequest(adresses);
-      let response_google_api: Object[] = [];
-      let google_api_data: Object;
+      let google_api_data: Object[] = [];
 
-      // TO DO: Colocar o for no repository
-      for(let count = 0; count < adresses_combined.length; count++){
-        google_api_data = await this.route_maps_repository.getInformationsFromGoogle(adresses_combined[count]);
-        response_google_api.push(google_api_data);
-      }
+      google_api_data = await this.route_maps_repository.getInformationsFromGoogle(adresses_combined);
+      let response_data = this.get_adresses_repository.orderAdresses(google_api_data, order);
 
-      let teste = this.get_adresses_repository.orderAdresses(response_google_api, order);
-
-      return teste;
+      return response_data;
     } catch(error){
       return console.error(error);
 
