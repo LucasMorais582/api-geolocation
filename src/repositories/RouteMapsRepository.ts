@@ -1,21 +1,38 @@
+import axios from 'axios';
+import Dotenv from 'dotenv';
+
+interface AdressUrl {
+  destination: string;
+  origin: string;
+}
+
 class RouteMapsRepository {
 
-  public combineAdressesForRequest(adresses: string[]): Object[]{
-  /*
-    Criação de matriz para calcular o trajeto entre 2 distâncias sem que haja repetição, no algoritmo abaixo, usa-se
-    só alguns elementos da diagonal principal superior para pegar a combinação linha (endereço 1) + coluna (endereço 2) necessária.
-  */  
+  public async getInformationsFromGoogle(adress: AdressUrl): Promise<any>{
+    Dotenv.config();
+    const key = process.env.API_GOOGLE_KEY;
 
-  let combined_adresses = [];
-  let count_column = 1;
-  for(let line = 0; line < adresses.length; line++){
-    for(let column = count_column; column < adresses.length; column++){
-      combined_adresses.push({origin: adresses[line], destination: adresses[column]})
+    try {
+      /* 
+        Formatação da url buscadora de endereço: 
+        Sempre em escala especializadora, ou seja, País --> Estado --> Munícipio --> Bairo --> Rua
+        Sempre separados com +
+      */
+      
+      // Url para geração da melhor rota entre origem e detino
+      const routes  = await axios.get(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${adress.origin}&destination=
+        ${adress.destination}&key=${key}`);
+      
+      // Cálculo da distância entre origem e destino
+      const distance = await axios.get(`
+        https://maps.googleapis.com/maps/api/distancematrix/json?origins=${adress.origin}&destinations=${adress.destination}
+        &mode=driving&language=en-EN&key=${key}`);
+
+      return distance.data;
+    } catch (error) {
+      return console.error(error);
     }
-    count_column += 1;
-  }
-
-  return combined_adresses;
   }
 }
 

@@ -6,6 +6,16 @@ interface adress{
   number: string;
 }
 
+interface googleObject{
+  rows:{
+    elements:{
+      distance:{
+        value: number;
+      }
+    }
+  }
+}
+
 class GetAdressesRepository {
 
   public concatAdressForRequest(adresses: adress[]): Object[]{
@@ -19,6 +29,36 @@ class GetAdressesRepository {
     });
     
     return array_adresses;
+  }
+
+  public combineAdressesForRequest(adresses: Object[]): Object[]{
+    /*
+      Criação de matriz para calcular o trajeto entre 2 distâncias sem que haja repetição, no algoritmo abaixo, usa-se
+      só alguns elementos da diagonal principal superior para pegar a combinação linha (endereço 1) + coluna (endereço 2) necessária.
+    */  
+  
+    let combined_adresses = [];
+    let count_column = 1;
+    for(let line = 0; line < adresses.length; line++){
+      for(let column = count_column; column < adresses.length; column++){
+        combined_adresses.push({origin: adresses[line], destination: adresses[column]})
+      }
+      count_column += 1;
+    }
+  
+    return combined_adresses;
+  }
+
+  public orderAdresses(objects: googleObject[] | any[], order: string): Object[]{
+    let adresses_ordened: googleObject[] = [];
+
+    if (order === 'DESC') adresses_ordened = objects.sort((n1,n2) => n2.rows[0].elements[0].distance.value -
+    n1.rows[0].elements[0].distance.value);
+
+    else adresses_ordened = objects.sort((n1,n2) => n1.rows[0].elements[0].distance.value -
+    n2.rows[0].elements[0].distance.value);
+    
+    return adresses_ordened;
   }
 }
 
