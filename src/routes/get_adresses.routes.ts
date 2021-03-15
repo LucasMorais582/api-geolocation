@@ -10,10 +10,10 @@ let service = container.resolve(GetAdressesService);
 getAdressesRouter.post('/', async (request, response) => {
   try {
     
-    let teste = service.execute(request.body);
+    let order = request.query.order;
+    let response_service = await service.execute(request.body, order);
     
-    
-    return response.json(teste);
+    return response.json(response_service);
   } catch (error) {
     console.error(error);
   }
