@@ -13,7 +13,7 @@ getAdressesRouter.post('/', async (request, response) => {
 
     let order: any = request.query.order ? request.query.order: null;    
     let response_service = await service.execute(request.body, order);
-    
+
     return response.status(response_service.code).json(response_service.data);
   } catch (error) {
     console.error(error);

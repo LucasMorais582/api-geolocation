@@ -22,12 +22,11 @@ class GetAdressesRepository {
     try{
       let adress;
       let array_adresses: any[] = [];
-      
+
       adresses.forEach((index: any) => {
         adress = (Object.values(index));
         array_adresses.push(adress.join('+'));
       });
-      
       return array_adresses;
     } catch(error){
         return { code: 500, data: error};
@@ -40,7 +39,9 @@ class GetAdressesRepository {
         Criação de matriz para calcular o trajeto entre 2 distâncias sem que haja repetição, no algoritmo abaixo, usa-se
         só alguns elementos da diagonal principal superior para pegar a combinação linha (endereço 1) + coluna (endereço 2) necessária.
       */  
-    
+
+      if(adresses.length <= 1) return { code: 500, data: 'Should be require more than one address' };
+
       let combined_adresses = [];
       let count_column = 1;
       for(let line = 0; line < adresses.length; line++){
