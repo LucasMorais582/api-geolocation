@@ -31,12 +31,15 @@ class RouteMapsRepository {
         const distance = await axios.get(`
           https://maps.googleapis.com/maps/api/distancematrix/json?origins=${adress[count].origin}&destinations=
           ${adress[count].destination}&mode=driving&language=en-EN&key=${key}`);
-          response_google_api.push(distance.data);
-      }
+
+          if(!distance.data.rows.length) return {code: 500, data: distance.data.status};
+
+          else response_google_api.push(distance.data);
+        }
 
       return response_google_api;
     } catch (error) {
-      return console.error(error);
+      return { code: 500, data: error};
     }
   }
 }
